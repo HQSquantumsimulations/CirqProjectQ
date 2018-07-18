@@ -44,7 +44,21 @@ class PhZGate(BasicPhaseGate):
         return np.matrix([[1, 0], [0, cmath.exp(-1.0j * self.angle)]])
 
     def __str__(self):
-        return "PhZ"
+        return "{}({})".format(self.__class__.__name__,
+                np.round(self.angle, 2))
+
+    def tex_str(self):
+        """
+        Return the Latex string representation of a BasicPhaseGate.
+
+        Returns the class name and the angle as a subscript, i.e.
+
+        .. code-block:: latex
+
+            [CLASSNAME]$_[ANGLE]$
+        """
+        return "{}$_{{}}$".format(self.__class__.__name__,
+                np.round(self.angle, 2))
 
 class PhXGate(BasicPhaseGate):
     r"""
@@ -62,7 +76,21 @@ class PhXGate(BasicPhaseGate):
         return H.matrix.dot(np.matrix([[1, 0], [0, cmath.exp(-1.0j * self.angle)]])).dot(H.matrix)
 
     def __str__(self):
-        return "PhX"
+        return "{}({})".format(self.__class__.__name__,
+                np.round(self.angle, 2))
+
+    def tex_str(self):
+        """
+        Return the Latex string representation of a BasicPhaseGate.
+
+        Returns the class name and the angle as a subscript, i.e.
+
+        .. code-block:: latex
+
+            [CLASSNAME]$_[ANGLE]$
+        """
+        return "{}$_{{}}$".format(self.__class__.__name__,
+                np.round(self.angle, 2))
 
 class PhYGate(BasicPhaseGate,
               XmonGate):
@@ -81,7 +109,21 @@ class PhYGate(BasicPhaseGate,
         return Rx(phi).matrix.dot(np.matrix([[1, 0], [0, cmath.exp(-1.0j * self.angle)]])).dot(Rx(-phi).matrix)
 
     def __str__(self):
-        return "PhY"
+        return "{}({})".format(self.__class__.__name__,
+                np.round(self.angle, 2))
+
+    def tex_str(self):
+        """
+        Return the Latex string representation of a BasicPhaseGate.
+
+        Returns the class name and the angle as a subscript, i.e.
+
+        .. code-block:: latex
+
+            [CLASSNAME]$_[ANGLE]$
+        """
+        return "{}$_{{}}$".format(self.__class__.__name__,
+                np.round(self.angle, 2))
 
 class Exp11Gate(XmonGate):
     r"""
@@ -101,7 +143,17 @@ class Exp11Gate(XmonGate):
                           [0, 0, 0, cmath.exp(1.0j * self.angle)]])
 
     def __str__(self):
-        return "Exp11({})".format(np.round(self.angle/np.pi,2))
+        return "@({})".format(np.round(self.angle, 2))
+
+    def tex_str(self):
+        """
+        Returns the class name and the angle as a subscript, i.e.
+
+        .. code-block:: latex
+
+            [CLASSNAME]$_[ANGLE]$
+        """
+        return "@$_{{{}}}$".format(np.round(self.angle / np.pi, 2))
 
 class ExpWGate(XmonGate):
     r"""
@@ -128,6 +180,10 @@ class ExpWGate(XmonGate):
     def __str__(self):
         return "W({}, {})".format(np.round(self.angle/np.pi,2), np.round(self.axis_angle/np.pi, 2))
 
+    def tex_str(self):
+        return "W$_{{{}, {}}}$".format(np.round(self.angle/np.pi,2),
+                   np.round(self.axis_angle/np.pi, 2))
+
 class ExpZGate(Rz, XmonGate):
     r"""
     A rotation gate around the Z-axis.
@@ -143,4 +199,18 @@ class ExpZGate(Rz, XmonGate):
         Rz.__init__(self, half_turns * cmath.pi)
 
     def __str__(self):
-        return "ExpZ({})".format(np.round(self.angle / np.pi,2))
+        return "Z({})".format(np.round(self.angle / np.pi,2))
+
+    def tex_str(self):
+        return "Z$_{{{}}}$".format(np.round(self.angle / np.pi,2))
+
+from projectq.backends._circuits._to_latex import get_default_settings
+def drawer_settings():
+    xmon_settings = get_default_settings()
+    xmon_settings['gates']['ExpWGate'] = {'height': 0.8, 'offset': 0.3,
+                 'pre_offset': 0.2, 'width': 1.75}
+    xmon_settings['gates']['ExpZGate'] = {'height': 0.8, 'offset': 0.3,
+                 'pre_offset': 0.2, 'width': 1.}
+    xmon_settings['gates']['Exp11Gate'] = {'height': 0.8, 'offset': 0.3,
+                 'pre_offset': 0.2, 'width': 1.}
+    return xmon_settings
