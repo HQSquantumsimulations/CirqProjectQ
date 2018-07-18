@@ -7,3 +7,5 @@ CirqProjectQ provides two main functionalities:
 1. A ProjectQ backend to convert a ProjectQ algorithm to a cirq.Circuit.
 
 2. ProjectQ decompositions from common gates to native Xmon gates that can be used to simulate a Google quantum computer with ProjectQ.
+
+For more information see the detailed code [documentation](https://cirqprojectq.readthedocs.io/en/latest/)
