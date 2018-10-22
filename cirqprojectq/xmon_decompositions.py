@@ -17,7 +17,7 @@ This file provides decompositon rules to decompose common gates into Xmon gates.
 """
 import numpy as np
 from projectq.cengines import DecompositionRule, DecompositionRuleSet
-from projectq import ops
+from projectq import ops, cengines, setups
 from projectq.meta import Control, get_control_count
 from . import xmon_gates
 
@@ -84,7 +84,8 @@ def _decompose_H(cmd):
     qb = cmd.qubits
     eng = cmd.engine
     with Control(eng, cmd.control_qubits):
-        xmon_gates.ExpWGate(half_turns=.5, axis_half_turns=.5) | qb
+        #TODO: I added a minus! Check please!
+        xmon_gates.ExpWGate(half_turns=.5, axis_half_turns=-.5) | qb
         xmon_gates.ExpZGate(half_turns=1.) | qb
 
 all_defined_decomposition_rules.append(DecompositionRule(ops.HGate,
@@ -107,3 +108,30 @@ def _decompose_CNOT(cmd):
 
 all_defined_decomposition_rules.append(DecompositionRule(ops.XGate,
                              _decompose_CNOT, _recognize_CNOT))
+
+
+def _recognize_SWAP(cmd):
+    if isinstance(cmd.gate, ops.SwapGate):
+        return True
+    else:
+        return False
+
+def _decompose_SWAP(cmd):
+    """
+
+    """
+    qb = cmd.qubits
+    xmon_gates.ExpW(.5, .5) | qb[0]
+    xmon_gates.ExpW(.5, 0) | qb[1]
+    xmon_gates.Exp11Gate(half_turns=1.0) | (cmd.control_qubits[0], qb[0])
+    xmon_gates.ExpW(-.5, .5) | qb[0]
+    xmon_gates.ExpW(-.5, 0) | qb[1]
+    xmon_gates.Exp11Gate(half_turns=1.0) | (cmd.control_qubits[0], qb[0])
+    xmon_gates.ExpW(.5, .5) | qb[0]
+    xmon_gates.ExpW(.5, 0) | qb[1]
+    xmon_gates.Exp11Gate(half_turns=1.0) | (cmd.control_qubits[0], qb[0])
+    xmon_gates.ExpZGate(.5) | qb[0]
+    xmon_gates.ExpZGate(-.5) | qb[1]
+
+all_defined_decomposition_rules.append(DecompositionRule(ops.SwapGate,
+                             _decompose_SWAP, _recognize_SWAP))

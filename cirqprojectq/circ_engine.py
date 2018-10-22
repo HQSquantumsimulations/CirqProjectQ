@@ -17,7 +17,7 @@ Provides a projectq engine that translates a projectq circuit to a cirq circuit.
 """
 from projectq import ops as pqo
 from projectq.cengines import BasicEngine
-from projectq.meta import get_control_count, QubitPlacementTag
+from projectq.meta import get_control_count
 from .common_rules import common_gates_ruleset
 from . import xmon_rules
 import cirq
@@ -30,8 +30,10 @@ class CIRQ(BasicEngine):
         - device (:class:`cirq.devices.Device`) - a device that provides the qubits.
         - rules (cirqprojectq._rules_pq_to_cirq.Ruleset_pq_to_cirq)
     """
-    def __init__(self, qubits=None, device=None, rules=None):
+    def __init__(self, qubits=None, device=None, rules=None,
+                 strategy=cirq.circuits.InsertStrategy.EARLIEST):
         BasicEngine.__init__(self)
+        self.strategy = strategy
         #TODO: Make rules an input.
         if rules is None:
             self._rules = common_gates_ruleset
@@ -74,6 +76,15 @@ class CIRQ(BasicEngine):
         self._mapping = dict()
         self._inverse_mapping = dict()
 
+    def reset(self, keep_map=True):
+        map_ = self._mapping.copy()
+        imap_ = self._inverse_mapping.copy()
+        self._reset()
+        self._new = True
+        if keep_map:
+            self._mapping = map_
+            self._inverse_mapping = imap_
+
     def is_available(self, cmd):
         """
         Returns true if the command can be translated.
@@ -99,11 +110,12 @@ class CIRQ(BasicEngine):
             self._operations = []
         if cmd.gate == pqo.Allocate:
             qb_id = cmd.qubits[0][0].id
-            for tag in cmd.tags:
-                if isinstance(tag, QubitPlacementTag):
-                    self._mapping[qb_id] = tag.position
-                    self._inverse_mapping[tag.position] = qb_id
-                    break
+            #TODO placement
+#            for tag in cmd.tags:
+#                if isinstance(tag, QubitPlacementTag):
+#                    self._mapping[qb_id] = tag.position
+#                    self._inverse_mapping[tag.position] = qb_id
+#                    break
             if qb_id not in self._mapping:
                 self._mapping[qb_id] = qb_id
 #                raise Exception("No qubit placement info found in Allocate.\n"
@@ -119,7 +131,9 @@ class CIRQ(BasicEngine):
                 raise TypeError("Gate {} not known".format(cmd.gate.__class__))
 
     def _run(self):
-        self.circuit.append(self._operations)
+        self.circuit.append(self._operations,
+                            strategy=cirq.circuits.InsertStrategy.EARLIEST)
+        self._operations = []
 
     def receive(self, command_list):
         """

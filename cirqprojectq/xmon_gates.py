@@ -15,7 +15,7 @@
 """
 This file provides Xmon gates for projectq.
 """
-from projectq.ops import BasicGate, BasicPhaseGate, H, Rx, Rz
+from projectq.ops import BasicGate, BasicPhaseGate, H, Rx, Rz, NotMergeable
 import numpy as np
 import cmath
 
@@ -181,7 +181,7 @@ class ExpWGate(XmonGate):
         return "W({}, {})".format(np.round(self.angle/np.pi,2), np.round(self.axis_angle/np.pi, 2))
 
     def tex_str(self):
-        return "W$_{{{}, {}}}$".format(np.round(self.angle/np.pi,2),
+        return "W$_{{{}, {}}}$".format(np.round(self.angle/np.pi, 2),
                    np.round(self.axis_angle/np.pi, 2))
 
 class ExpZGate(Rz, XmonGate):
@@ -204,13 +204,31 @@ class ExpZGate(Rz, XmonGate):
     def tex_str(self):
         return "Z$_{{{}}}$".format(np.round(self.angle / np.pi,2))
 
+    def get_merged(self, other):
+        """
+        Return self merged with another gate.
+        Default implementation handles rotation gate of the same type, where
+        angles are simply added.
+        Args:
+            other: Rotation gate of same type.
+        Raises:
+            NotMergeable: For non-rotation gates or rotation gates of
+                different type.
+        Returns:
+            New object representing the merged gates.
+        """
+        if isinstance(other, self.__class__):
+            return self.__class__((self.angle + other.angle) / cmath.pi)
+        raise NotMergeable("Can't merge different types of rotation gates.")
+
 from projectq.backends._circuits._to_latex import get_default_settings
 def drawer_settings():
     xmon_settings = get_default_settings()
+    xmon_settings['gate_shadow'] = False
     xmon_settings['gates']['ExpWGate'] = {'height': 0.8, 'offset': 0.3,
                  'pre_offset': 0.2, 'width': 1.75}
     xmon_settings['gates']['ExpZGate'] = {'height': 0.8, 'offset': 0.3,
                  'pre_offset': 0.2, 'width': 1.}
-    xmon_settings['gates']['Exp11Gate'] = {'height': 0.8, 'offset': 0.3,
-                 'pre_offset': 0.2, 'width': 1.}
+    xmon_settings['gates']['Exp11Gate'] = {'height': .8, 'offset': 0.3,
+                 'pre_offset': 0.3, 'width': 1.}
     return xmon_settings
