@@ -1,6 +1,6 @@
 sphinx>=1.4
 nbsphinx
 numpy
-projectq>=0.4
-cirq>=0.3
+git+git://github.com/quantumlib/cirq#egg=cirq
+projectq
 ipykernel
