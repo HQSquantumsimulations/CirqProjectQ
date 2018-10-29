@@ -30,19 +30,73 @@ class XmonGate(BasicGate):
         BasicGate.__init__(self)
 
 class Exp11Gate(XmonGate):
-    r"""
-    Two-qubit rotation around the :math:`|11\rangle` axis.
+    r"""A two-qubit interaction that phases the amplitude of the 11 state.
+
+    This gate implements :math:`\exp(i \pi \varphi |11\rangle\langle 11|)` where :math:`\varphi`
+    is half turns.
+
+    As a matrix it reads
+
+    .. math::
+        \begin{pmatrix}
+        1 & 0 & 0 & 0\\
+        0 & 1 & 0 & 0\\
+        0 & 0 & 1 & 0\\
+        0 & 0 & 0 & \exp(i\varphi \pi)
+        \end{pmatrix}
+
+    Warning:
+        There is no (-) sign in the definition of the gate.
+
+    Note:
+        The half_turn parameter is such that a full turn is the
+        identity matrix, in contrast to the single qubit gates, where a full
+        turn is minus identity. The single qubit half-turn gates are defined
+        so that a full turn corresponds to a rotation on the Bloch sphere of a
+        360 degree rotation. For two qubit gates, there isn't a Bloch sphere,
+        so the half_turn corresponds to half of a full rotation in U(4).
+
 
     Args:
-        - half_turns (float) - angle of rotation in units of :math:`\pi`.
+        half_turns (float): angle of rotation in units of :math:`\pi`.
     """
     def __init__(self, half_turns):
         XmonGate.__init__(self)
-        self.angle = half_turns * np.pi
+        self.half_turns = half_turns
         self.interchangeable_qubit_indices = [[0, 1]]
 
     @property
+    def angle(self):
+        r"""Rotation angle in rad, :math:`\in(-\pi, \pi]`"""
+        return self.half_turns * cmath.pi
+
+    @property
+    def half_turns(self):
+        r"""Rotation angle in half turns, :math:`\in(-1, 1]`"""
+        return self._half_turns
+
+    @half_turns.setter
+    def half_turns(self, half_turns):
+        self._half_turns = value.chosen_angle_to_canonical_half_turns(half_turns=half_turns,
+                                                                      rads=None,
+                                                                      degs=None)
+
+    @property
     def matrix(self):
+        r"""Gate matrix.
+
+        With :math:`\varphi=\mathrm{half\_turns}` the matrix implemented by the
+        Exp11Gate reads as
+        
+        .. math::
+            \begin{pmatrix}
+            1 & 0 & 0 & 0\\
+            0 & 1 & 0 & 0\\
+            0 & 0 & 1 & 0\\
+            0 & 0 & 0 & \exp(i\varphi \pi)
+            \end{pmatrix}
+
+        """
         return np.matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0],
                           [0, 0, 0, cmath.exp(1.0j * self.angle)]])
 
@@ -62,16 +116,23 @@ class Exp11Gate(XmonGate):
 class ExpWGate(XmonGate):
     r"""A rotation around an axis in the XY plane of the Bloch sphere.
 
-    Cirq docstring says:
 
-    'This gate is a "phased X rotation". Specifically:
+
+    This gate is a "phased X rotation". Specifically
+
         ───W(axis)^t─── = ───Z^-axis───X^t───Z^axis───
 
-    This gate is exp(-i * pi * W(axis_half_turn) * half_turn / 2) where
-        W(theta) = cos(pi * theta) X + sin(pi * theta) Y
-     or in matrix form
-       W(theta) = [[0, cos(pi * theta) - i sin(pi * theta)],
-                   [cos(pi * theta) + i sin(pi * theta), 0]]
+    This gate is
+
+    .. math::
+
+        \exp(-i * \pi * W(\mathrm{axis\_half\_turn}) * \mathrm{half\_turn} / 2)
+
+    where
+
+    .. math::
+
+        W(\theta) = \cos(\pi \theta) X + \sin(\pi \theta) Y
 
     Note the half_turn nomenclature here comes from viewing this as a rotation
     on the Bloch sphere. Two half_turns correspond to a rotation in the
@@ -82,14 +143,24 @@ class ExpWGate(XmonGate):
     along the -X direction while an axis_half_turn of 0.5 correspond to
     an operator pointing along the Y direction.'
 
-    Contrary to the docstring, cirq implements the gate
-    exp(-i * pi * half_turns / 2) * exp(-i * pi * W(axis_half_turn) * half_turn / 2)
-    which differs by a global phase.
+    Contrary to the docstring, cirq implements the gate (:math:`\varphi = \mathrm{half\_turns}`
+    and :math:`\theta=\mathrm{axis\_half\_turns}`):
+
+    .. math::
+
+        \exp(i \pi \varphi / 2) \exp(-i \pi W(\theta) \varphi / 2)
+
+    which differs by a global phase :math:`\exp(i \varphi/2)`.
 
     This class mimics the cir implementation, i.e., the matrix represented by this gate
-    reads as (a = half_turns, A = axis_half_turns):
-        exp(i a * pi / 2) * [[cos(a * pi / 2), -i * sin(a * pi / 2) * exp(-i A * pi)],
-                             [-i * sin(a * pi / 2) * exp(i A * pi), cos(a * pi / 2)]]
+    reads as
+
+    .. math::
+        \exp(i \varphi \pi / 2)\begin{pmatrix}
+        \cos(\varphi\pi / 2) & -i \sin(\varphi \pi / 2) exp(-i \theta \pi)\\
+        -i \sin(\varphi \pi / 2) \exp(i \theta \pi) & \cos(\varphi \pi / 2)
+        \end{pmatrix}
+
     whih is a rotation around the W-axis and an additional global phase.
 
     Note:
@@ -107,8 +178,8 @@ class ExpWGate(XmonGate):
         I'm not sure if this is correct as it seems to give different matrices.
 
     Args:
-        - half_turns (float) - angle of rotation in units of :math:`\pi`.
-        - axis_half_turns (float) - axis between X and Y in units of :math:`\pi`.
+        half_turns (float): angle of rotation in units of :math:`\pi`.
+        axis_half_turns (float): axis between X and Y in units of :math:`\pi`.
     """
     def __init__(self, half_turns, axis_half_turns=0):
         XmonGate.__init__(self)
@@ -125,10 +196,12 @@ class ExpWGate(XmonGate):
 
     @property
     def axis_angle(self):
+        r"""Axis angle in rad, :math:`\in(-\pi, \pi]`"""
         return self._axis_half_turns * cmath.pi
 
     @property
     def axis_half_turns(self):
+        r"""Axis angle in half turns, :math:`\in(-1, 1]`"""
         return self._axis_half_turns
 
     @axis_half_turns.setter
@@ -140,10 +213,12 @@ class ExpWGate(XmonGate):
 
     @property
     def angle(self):
+        r"""Rotation angle in rad, :math:`\in(-\pi, \pi]`"""
         return self.half_turns * cmath.pi
 
     @property
     def half_turns(self):
+        r"""Rotation angle in half turns, :math:`\in(-1, 1]`"""
         return self._half_turns
 
     @half_turns.setter
@@ -155,6 +230,19 @@ class ExpWGate(XmonGate):
 
     @property
     def matrix(self):
+        r"""Rotation matrix.
+
+        With :math:`\varphi = \mathrm{half\_turns}` and
+        :math:`\theta=\mathrm{axis\_half\_turns}` this gate implements the matrix
+
+        .. math::
+
+            \exp(i \varphi \pi / 2)\begin{pmatrix}
+            \cos(\varphi\pi / 2) & -i \sin(\varphi \pi / 2) exp(-i \theta \pi)\\
+            -i \sin(\varphi \pi / 2) \exp(i \theta \pi) & \cos(\varphi \pi / 2)
+            \end{pmatrix}
+
+        """
         W = np.exp(-1.0j * self.axis_angle)
         c = np.cos(self.angle / 2)
         s = np.sin(self.angle / 2)
@@ -178,13 +266,20 @@ class ExpWGate(XmonGate):
 class ExpZGate(XmonGate):
     r"""A rotation around the Z axis of the Bloch sphere.
 
-    This gate is exp(-i * \pi * Z * half_turns / 2) where Z is the Z matrix
-        Z = [[1, 0],
-             [0, -1]].
+    This gate implements :math:`\exp(-i \pi Z \varphi / 2) where Z is the Z matrix
 
-    Thee full matrix reads (half_turns = A):
-        [[exp(-i pi A / 2), 0],
-         [0, exp(i pi A / 2)]]
+        Z = [[1, 0], [0, -1]]
+
+    and :math:`\varphi` are half turns.
+
+    The full matrix reads:
+
+    .. math::
+
+        \begin{pmatrix}
+        exp(-i \pi \varphi / 2) & 0\\
+        0 & exp(i \pi \varphi / 2)
+        \end{pmatrix}
 
     Note the half_turn nomenclature here comes from viewing this as a rotation
     on the Bloch sphere. Two half_turns correspond to a rotation in the
@@ -210,10 +305,12 @@ class ExpZGate(XmonGate):
 
     @property
     def angle(self):
+        r"""Rotation angle in rad, :math:`\in(-\pi, \pi]`"""
         return self.half_turns * cmath.pi
 
     @property
     def half_turns(self):
+        r"""Rotation angle in half turns, :math:`\in(-1, 1]`"""
         return self._half_turns
 
     @half_turns.setter
@@ -223,6 +320,17 @@ class ExpZGate(XmonGate):
                                                                       degs=None)
     @property
     def matrix(self):
+        r"""Rotation matrix.
+
+        With :math:`\varphi = \mathrm{half\_turns}` this gate implements the matrix
+
+        .. math::
+
+            \begin{pmatrix}
+            \cos(\varphi\pi / 2) - i \sin(\varphi \pi / 2) & 0\\
+            0 & \cos(\varphi\pi / 2) + i \sin(\varphi \pi / 2)
+            \end{pmatrix}
+        """
         return np.matrix([[np.cos(self.angle / 2) - 1.0j * np.sin(self.angle / 2), 0],
                           [0, np.cos(self.angle / 2) + 1.0j * np.sin(self.angle / 2)]])
 
@@ -230,6 +338,7 @@ class ExpZGate(XmonGate):
         return "Z({})".format(np.round(self.angle / np.pi,2))
 
     def tex_str(self):
+        r"""Latex representation of the gate."""
         return "Z$_{{{}}}$".format(np.round(self.angle / np.pi,2))
 
     def get_merged(self, other):

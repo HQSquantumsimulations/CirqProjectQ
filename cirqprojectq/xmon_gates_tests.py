@@ -20,3 +20,7 @@ def test_expw_matrix(half_turns, axis_half_turns):
                          axis_half_turns=axis_half_turns).matrix()
     nptest.assert_array_almost_equal(m1, m2)
 
+@pytest.mark.parametrize("half_turns", [-1.5, -1., -.5, 0, 0.25, 0.3, 1., 1.5, 2.])
+def test_expw_matrix(half_turns):
+    nptest.assert_array_almost_equal(xmon_gates.Exp11Gate(half_turns=half_turns).matrix,
+                              google.Exp11Gate(half_turns=half_turns).matrix())
