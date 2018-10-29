@@ -1,6 +1,6 @@
 sphinx>=1.4
 nbsphinx
-ipykernel
-projectq
-cirq
 numpy
+projectq>=0.4
+cirq>=0.3
+ipykernel
