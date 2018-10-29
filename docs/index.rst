@@ -13,7 +13,7 @@ Welcome to Heisenberg - ProjectQ -Cirq - Extension's documentation!
 
    source/introduction
    source/Examples
-   source/reference.rst
+   source/reference
    source/CIRQ
    source/Decompose
 
