@@ -57,6 +57,7 @@ Decomposition rules
 
 .. automodule:: cirqprojectq.xmon_decompositions
    :members:
+   :private-members:
    :undoc-members:
    :show-inheritance:
 
