@@ -34,16 +34,13 @@ For example, we can translate a simple quantum algorithm to Cirq and print the f
 The backend
 -----------
 
-.. autoclass:: cirqprojectq.circ_engine.CIRQ
+.. automodule:: cirqprojectq.circ_engine
    :members:
    :undoc-members:
    :show-inheritance:
 
 Translation rules
 -----------------
-
-Classes
-+++++++
 
 .. automodule:: cirqprojectq._rules_pq_to_cirq
    :members:

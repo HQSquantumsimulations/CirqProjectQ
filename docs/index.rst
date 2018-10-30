@@ -8,12 +8,11 @@ Welcome to Heisenberg - ProjectQ -Cirq - Extension's documentation!
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    source/introduction
    source/Examples
-   source/reference
    source/CIRQ
    source/Decompose
 

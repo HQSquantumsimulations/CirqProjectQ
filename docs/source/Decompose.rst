@@ -1,5 +1,16 @@
-Decompose to Xmon gates
-=======================
+Decompose to Xmon gates and simulate xmon devices
+=================================================
+
+Cirqprojectq decomposes arbitrary circuits to xmon gates such that
+proejctq can be used to simulate xmon devices.
+
+Important modules are
+
+.. autosummary::
+
+    cirqprojectq.xmon_gates
+    cirqprojectq.xmon_decompositions
+    cirqprojectq.xmon_setup
 
 In this example we show how to use projectq to decompose a circuit into Xmon native gates.
 
@@ -44,12 +55,23 @@ In this example we show how to use projectq to decompose a circuit into Xmon nat
 Decomposition rules
 -------------------
 
-The module :mod:`cirqprojectq.xmon_decompositions` provides decomposition rules for rotation gates (Rx, Ry, Rz), Pauli gates (X, Y, Z), the Hadamard gate and for CNOT gates into native Xmon gates.
-All defined rules can be imported as
-:meth:`cirqprojectq.xmon_decompositions.all_defined_decomposition_rules`.
-
 .. automodule:: cirqprojectq.xmon_decompositions
    :members:
    :undoc-members:
    :show-inheritance:
-   :private-members:
+
+Xmon gates
+----------
+
+.. automodule:: cirqprojectq.xmon_gates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Xmon setup
+----------
+
+.. automodule:: cirqprojectq.xmon_setup
+   :members:
+   :undoc-members:
+   :show-inheritance:
