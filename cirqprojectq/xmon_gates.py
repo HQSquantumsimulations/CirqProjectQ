@@ -87,7 +87,7 @@ class Exp11Gate(XmonGate):
 
         With :math:`\varphi=\mathrm{half\_turns}` the matrix implemented by the
         Exp11Gate reads as
-        
+
         .. math::
             \begin{pmatrix}
             1 & 0 & 0 & 0\\
