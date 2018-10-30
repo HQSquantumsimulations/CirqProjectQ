@@ -1,7 +1,6 @@
-python>=3.6
 sphinx>=1.4
 nbsphinx
 numpy
-cirq
 projectq
 ipykernel
+cirq
