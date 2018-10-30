@@ -3,4 +3,4 @@ nbsphinx
 numpy
 projectq
 ipykernel
-cirq
+cirq>=0.3.1
