@@ -13,7 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-This file provides Xmon gates for projectq.
+This module provides Xmon gates for projectq.
+
+Xmon qubits are a specific type of transmon qubit developed by Google.
+In the cirq framework xmon specific gates are defined.
+This file ports these gates to projectq and allows imulation
+of algorithms with xmon qubits. 
 """
 from projectq.ops import BasicGate, BasicPhaseGate, H, Rx, Rz, NotMergeable
 import numpy as np
@@ -175,7 +180,6 @@ class ExpWGate(XmonGate):
         Another convention is to change a positive rotation around a negative axis to a
         negative rotation around a postive axis, i.e., half_turns -> - half_turns
         and axis_half_turns -> axis_half_turns + 1 if axis_half_turns < 0.
-        I'm not sure if this is correct as it seems to give different matrices.
 
     Args:
         half_turns (float): angle of rotation in units of :math:`\pi`.
