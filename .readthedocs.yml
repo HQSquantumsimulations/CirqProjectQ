@@ -3,6 +3,4 @@ build:
   image: latest
 python:
   version: 3.6
-  pip_install: true
-  extra_requirements:
-    - pybind11
+  pip_install: false
