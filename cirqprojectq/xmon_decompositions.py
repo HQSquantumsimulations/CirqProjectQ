@@ -12,8 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
-This file provides decompositon rules to decompose common gates into Xmon gates.
+r"""Provides decompositon rules to decompose common gates into Xmon gates.
+
+The module :mod:`cirqprojectq.xmon_decompositions` provides decomposition rules for
+rotation gates (Rx, Ry, Rz), Pauli gates (X, Y, Z), the Hadamard gate and for CNOT
+gates into native Xmon gates.
+All defined rules can be imported as
+:meth:`cirqprojectq.xmon_decompositions.all_defined_decomposition_rules`.
+
+All decompositions rules can be imported with
+
+A full engine list can be generated with :meth:`cirqproejctq.xmon_setup.xmon_engines()`
 """
 import numpy as np
 from projectq.cengines import DecompositionRule, DecompositionRuleSet

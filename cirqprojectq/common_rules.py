@@ -44,12 +44,12 @@ def _rx_ry_rz(cmd, mapping, qubits):
     is dropped.
 
     Args:
-        - cmd (:class:`projectq.ops.Command`) - a projectq command instance
-        - mapping (:class:`dict`) - a dictionary of qubit mappings
-        - qubits (list of :class:cirq.QubitID`) - cirq qubits
+        cmd (:class:`projectq.ops.Command`): a projectq command instance
+        mapping (:class:`dict`): a dictionary of qubit mappings
+        qubits (list of :class:cirq.QubitID`): cirq qubits
 
     Returns:
-        - :class:`cirq.Operation`
+        :class:`cirq.Operation`
     """
     gates = {pqo.Rx: cop.RotXGate,
                pqo.Ry: cop.RotYGate,
@@ -68,12 +68,12 @@ def _pauli_gates(cmd, mapping, qubits):
     Translate a Pauli (x, Y, Z) gate into a Cirq gate.
 
     Args:
-        - cmd (:class:`projectq.ops.Command`) - a projectq command instance
-        - mapping (:class:`dict`) - a dictionary of qubit mappings
-        - qubits (list of :class:cirq.QubitID`) - cirq qubits
+        cmd (:class:`projectq.ops.Command`): a projectq command instance
+        mapping (:class:`dict`): a dictionary of qubit mappings
+        qubits (list of :class:cirq.QubitID`): cirq qubits
 
     Returns:
-        - :class:`cirq.Operation`
+        :class:`cirq.Operation`
     """
     gates = {pqo.XGate: cop.X,
                pqo.YGate: cop.Y,
@@ -92,12 +92,12 @@ def _h_s_gate(cmd, mapping, qubits):
     Translate a Hadamard or S-gate into a Cirq gate.
 
     Args:
-        - cmd (:class:`projectq.ops.Command`) - a projectq command instance
-        - mapping (:class:`dict`) - a dictionary of qubit mappings
-        - qubits (list of :class:cirq.QubitID`) - cirq qubits
+        cmd (:class:`projectq.ops.Command`): a projectq command instance
+        mapping (:class:`dict`): a dictionary of qubit mappings
+        qubits (list of :class:cirq.QubitID`): cirq qubits
 
     Returns:
-        - :class:`cirq.Operation`
+        :class:`cirq.Operation`
     """
     gates = {pqo.HGate: cop.H,
                pqo.SGate: cop.S}
@@ -115,12 +115,12 @@ def _gates_with_known_matrix(cmd, mapping, qubits):
     Translate a single qubit gate with known matrix into a Cirq gate.
 
     Args:
-        - cmd (:class:`projectq.ops.Command`) - a projectq command instance
-        - mapping (:class:`dict`) - a dictionary of qubit mappings
-        - qubits (list of :class:cirq.QubitID`) - cirq qubits
+        cmd (:class:`projectq.ops.Command`): a projectq command instance
+        mapping (:class:`dict`): a dictionary of qubit mappings
+        qubits (list of :class:cirq.QubitID`): cirq qubits
 
     Returns:
-        - :class:`cirq.Operation`
+        :class:`cirq.Operation`
     """
     gate = cmd.gate
     if len(get_control_count(cmd)) == 0 and hasattr(gate, 'matrix'):

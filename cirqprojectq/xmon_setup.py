@@ -12,6 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+r"""Provides proejctq engines for simulation of xmon devices.
+
+A full engine list can be generated with :meth:`cirqproejctq.xmon_setup.xmon_engines()`
+"""
 from projectq import cengines, ops, setups
 from . import xmon_gates, xmon_decompositions
 
@@ -36,18 +41,22 @@ def _filter_xmon(eng, cmd):
         return False
 
 def xmon_rules():
+    r"""DecompositionRuleSet for decomposition into xmon gates."""
     allrules = xmon_decompositions.all_defined_decomposition_rules
     return cengines.DecompositionRuleSet(allrules)
 
 def replacer_xmon():
+    r"""Autoreplacer for decomposition into xmon gates."""
     rule_set = cengines.DecompositionRuleSet(
             modules=[xmon_decompositions, setups.decompositions])
     return cengines.AutoReplacer(rule_set)
 
 def xmon_supported_filter():
+    r"""InstructionFilter for xmon gates."""
     return cengines.InstructionFilter(_filter_xmon)
 
 def xmon_engines():
+    r"""Full engine list for simulation with xmon gates."""
     return [cengines.TagRemover(),
             cengines.LocalOptimizer(),
             replacer_xmon(),

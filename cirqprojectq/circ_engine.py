@@ -27,8 +27,10 @@ class CIRQ(BasicEngine):
     A projectq backend designated to translating to cirq.
 
     Args:
-        - device (:class:`cirq.devices.Device`) - a device that provides the qubits.
-        - rules (cirqprojectq._rules_pq_to_cirq.Ruleset_pq_to_cirq)
+        qubits (list(:class:`cirq.devices.grid_qubit`)): the qubits
+        device (:class:`cirq.devices.Device`): a device that provides the qubits.
+        rules (cirqprojectq._rules_pq_to_cirq.Ruleset_pq_to_cirq): rule set
+        strategy (:class:`cirq.circuits.InsertStrategy`): Insert strategy in cirq.
     """
     def __init__(self, qubits=None, device=None, rules=None,
                  strategy=cirq.circuits.InsertStrategy.EARLIEST):
@@ -48,7 +50,7 @@ class CIRQ(BasicEngine):
     @property
     def circuit(self):
         r"""
-        :class:`cirq.Circuit` - the circuit stored in the engine.
+        :class:`cirq.Circuit`: the circuit stored in the engine.
         """
         return self._circuit
 
@@ -56,27 +58,26 @@ class CIRQ(BasicEngine):
     @property
     def device(self):
         r"""
-        :class:`cirq.devices.Device`
+        :class:`cirq.devices.Device`: A device. Currently not used.
         """
         return self._device
 
     @property
     def qubits(self):
         r"""
-        list(:class:`cirq.QubitID`)
+        list(:class:`cirq.QubitID`): The cirq qubits used in the circuit.
         """
         return self._qubits
 
     def _reset(self):
-        r"""
-        Reset the circuit.
-        """
+        r"""Resets the circuit."""
         self._circuit = cirq.circuits.Circuit()
         self._operations = []
         self._mapping = dict()
         self._inverse_mapping = dict()
 
     def reset(self, keep_map=True):
+        r"""Resets the engine."""
         map_ = self._mapping.copy()
         imap_ = self._inverse_mapping.copy()
         self._reset()
@@ -102,8 +103,10 @@ class CIRQ(BasicEngine):
 
 
     def _store(self, cmd):
-        r"""
-        Append operations given in cmd to the :class:`cirq.Circuit`.
+        r"""Append operations given in cmd to the :class:`cirq.Circuit`.
+
+        Args:
+            cmd: Projectq command.
         """
         if self._new:
             self._new = False
@@ -131,6 +134,7 @@ class CIRQ(BasicEngine):
                 raise TypeError("Gate {} not known".format(cmd.gate.__class__))
 
     def _run(self):
+        r"""Appends operations to circuit and resets operations."""
         self.circuit.append(self._operations,
                             strategy=cirq.circuits.InsertStrategy.EARLIEST)
         self._operations = []

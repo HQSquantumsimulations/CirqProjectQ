@@ -25,7 +25,7 @@ class Ruleset_pq_to_cirq():
         operations.
 
         Args:
-            - rules (list of :class:`Rule_pq_to_cirq`) - the rules that can be used for translations.
+            rules (list of :class:`Rule_pq_to_cirq`): the rules that can be used for translations.
         """
         self._known_rules = defaultdict(list)
         self.add_rules(rules)
@@ -34,7 +34,8 @@ class Ruleset_pq_to_cirq():
         r"""
         Add rules to the set of known rules.
 
-         - rules (list of :class:`Rule_pq_to_cirq`) - the rules that can be used for translations.
+        Args:
+            rules (list of :class:`Rule_pq_to_cirq`): the rules that can be used for translations.
         """
 
         if hasattr(rules, '__iter__'):
@@ -47,7 +48,8 @@ class Ruleset_pq_to_cirq():
         r"""
         Add a single rule to the set of known rules.
 
-         - rule (:class:`Rule_pq_to_cirq`) - a rule that can be used for translations.
+        Args:
+            rule (:class:`Rule_pq_to_cirq`): a rule that can be used for translations.
         """
         for cls in rule.classes:
             self._known_rules[cls].append(rule.translation)
@@ -57,12 +59,12 @@ class Ruleset_pq_to_cirq():
         Translate a projectq operation into a Cirq operation.
 
         Args:
-            - cmd (:class:`projectq.ops.Command`) - a projectq command instance
-            - mapping (:class:`dict`) - a dictionary of qubit mappings
-            - qubits (list of :class:cirq.QubitID`) - cirq qubits
+            cmd (:class:`projectq.ops.Command`): a projectq command instance
+            mapping (:class:`dict`): a dictionary of qubit mappings
+            qubits (list of :class:cirq.QubitID`): cirq qubits
 
         Returns:
-            - :class:`cirq.Operation`
+            :class:`cirq.Operation`
         """
         if type(cmd.gate) in self._known_rules:
             return self._known_rules[type(cmd.gate)][0](cmd, mapping, qubits)
@@ -82,8 +84,8 @@ class Rule_pq_to_cirq():
         A class to store a single translation rule from Projectq to Cirq.
 
         Args:
-            - classes (list of :class:`projectq.ops.BasicGate`) - the gate classes to which the rule applies.
-            - translation (callable(:class:`projectq.ops.Command`, :class:`dict`, list of :class:cirq.QubitID`)) - a translation to cirq
+            classes (list of :class:`projectq.ops.BasicGate`): the gate classes to which the rule applies.
+            translation (callable(:class:`projectq.ops.Command`, :class:`dict`, list of :class:cirq.QubitID`)): a translation to cirq
         """
         self.classes = classes
         self.translation = translation

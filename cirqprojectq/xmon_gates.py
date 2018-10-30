@@ -270,7 +270,7 @@ class ExpWGate(XmonGate):
 class ExpZGate(XmonGate):
     r"""A rotation around the Z axis of the Bloch sphere.
 
-    This gate implements :math:`\exp(-i \pi Z \varphi / 2) where Z is the Z matrix
+    This gate implements :math:`\exp(-i \pi Z \varphi / 2)` where Z is the Z matrix
 
         Z = [[1, 0], [0, -1]]
 
