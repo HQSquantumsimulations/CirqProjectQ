@@ -9,9 +9,8 @@ with open('LICENSE') as file:
 install_requires = [
 		'cirq',
 		'projectq',
-    'cmath',
-    'numpy',
-    'pytest',
+    		'numpy',
+    		'pytest',
 ]
 
 setup(name='CirqProjecQ',
