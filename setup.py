@@ -13,7 +13,7 @@ install_requires = [
     		'pytest',
 ]
 
-setup(name='CirqProjecQ',
+setup(name='CirqProjectQ',
       description='',
       version='0.0.1',
       long_description=readme,
