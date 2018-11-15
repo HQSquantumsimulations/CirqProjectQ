@@ -102,7 +102,7 @@ class Exp11Gate(XmonGate):
             \end{pmatrix}
 
         """
-        return np.matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0],
+        return np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0],
                           [0, 0, 0, cmath.exp(1.0j * self.angle)]])
 
     def __str__(self):
@@ -250,10 +250,10 @@ class ExpWGate(XmonGate):
         W = np.exp(-1.0j * self.axis_angle)
         c = np.cos(self.angle / 2)
         s = np.sin(self.angle / 2)
-        rot = np.matrix([[c, -1.0j * s * W],
+        rot = np.array([[c, -1.0j * s * W],
                          [-1.0j * s * np.conj(W), c]])
         return np.exp(.5j * self.angle) * rot
-        # phase = np.matrix([[1., 0],
+        # phase = np.array([[1., 0],
         #                    [0, cmath.exp(1.0j * self.axis_angle)]])
         # c = cmath.exp(1j * self.angle)
         # rot = np.array([[1 + c, 1 - c], [1 - c, 1 + c]]) / 2
@@ -335,7 +335,7 @@ class ExpZGate(XmonGate):
             0 & \cos(\varphi\pi / 2) + i \sin(\varphi \pi / 2)
             \end{pmatrix}
         """
-        return np.matrix([[np.cos(self.angle / 2) - 1.0j * np.sin(self.angle / 2), 0],
+        return np.array([[np.cos(self.angle / 2) - 1.0j * np.sin(self.angle / 2), 0],
                           [0, np.cos(self.angle / 2) + 1.0j * np.sin(self.angle / 2)]])
 
     def __str__(self):
