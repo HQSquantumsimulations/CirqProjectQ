@@ -14,8 +14,9 @@ install_requires = [
 ]
 
 setup(name='CirqProjectQ',
-      description='',
-      version='0.0.1',
+      description=('Provides: ProjectQ decompositions from common gates to native cirq Xmon gates;'
+                   +'  ProjectQ backend to convert a ProjectQ algorithm to a cirq.Circuit'),
+      version='0.1',
       long_description=readme,
       packages=find_packages(exclude=('docs')),
       author='Heisenberg Quantum Simulations',
