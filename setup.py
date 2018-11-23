@@ -21,6 +21,7 @@ setup(name='CirqProjectQ',
       author='Heisenberg Quantum Simulations',
       author_email='info@heisenberg.xyz',
       url='heisenberg.xyz',
+      download_url='https://github.com/HeisenbergQS/CirqProjectQ/archive/v0.0.1.tar.gz',
       license=license,
       install_requires=install_requires
       )
