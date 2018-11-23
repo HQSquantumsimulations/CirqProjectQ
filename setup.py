@@ -20,7 +20,7 @@ setup(name='CirqProjectQ',
       packages=find_packages(exclude=('docs')),
       author='Heisenberg Quantum Simulations',
       author_email='info@heisenberg.xyz',
-      url='heisenberg.xyz',
+      url='https://github.com/HeisenbergQS/CirqProjectQ',
       download_url='https://github.com/HeisenbergQS/CirqProjectQ/archive/v0.0.1.tar.gz',
       license=license,
       install_requires=install_requires
