@@ -18,7 +18,7 @@ gates.
 """
 import cirq
 version = [int(cirq.__version__[0]), int(cirq.__version__[2])]
-assert(version[0] > 0 and version[1] >= 4)
+assert(version[0] > 0 or version[1] >= 4)
 import cmath
 import cirq, projectq
 from projectq import ops as pqo

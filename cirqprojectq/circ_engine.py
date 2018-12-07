@@ -15,10 +15,15 @@
 """
 Provides a projectq engine that translates a projectq circuit to a cirq circuit.
 """
+import cirq
+version = [int(cirq.__version__[0]), int(cirq.__version__[2])]
+if (version[0] == 0 and version[1] <= 3):
+    from .common_rules_03x import common_gates_ruleset
+else:
+    from .common_rules_040 import common_gates_ruleset
 from projectq import ops as pqo
 from projectq.cengines import BasicEngine
 from projectq.meta import get_control_count
-from .common_rules import common_gates_ruleset
 from . import xmon_rules
 import cirq
 

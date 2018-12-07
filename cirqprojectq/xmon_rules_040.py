@@ -61,7 +61,8 @@ def _expZGate(cmd, mapping, qubits):
     """
     qb_pos = [mapping[qb.id] for qr in cmd.qubits for qb in qr]
     assert len(qb_pos)==1
-    cirqGate = cop.ZPowGate(exponent=cmd.gate.angle / cmath.pi)
+    cirqGate = cop.ZPowGate(exponent=cmd.gate.angle / cmath.pi,
+                            global_shift=cmd.gate.angle / cmath.pi)
     if get_control_count(cmd) > 0:
         ctrl_pos = [mapping[qb.id] for qb in cmd.control_qubits]
         return cop.ControlledGate(cirqGate)(*[qubits[c] for c in ctrl_pos+qb_pos])
