@@ -1,4 +1,4 @@
-# Copyright 2018 Heisenberg Quantum Simulations
+# Copyright 2018 HQS Quantum Simulations
 # -*- coding: utf-8 -*-
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,8 @@ from projectq.ops import BasicGate, BasicPhaseGate, H, Rx, Rz, NotMergeable
 import numpy as np
 import cmath
 from cirq import value
-
+RTOL = 1e-10
+ATOL = 1e-12
 #TODO: implement merge and inverse for all gates
 
 class XmonGate(BasicGate):
@@ -33,6 +34,32 @@ class XmonGate(BasicGate):
         Abstract XmonGate class to distinguish mon from regular proejctq gates.
         """
         BasicGate.__init__(self)
+
+    def __eq__(self, other):
+        r""" 
+        Modification of ProjectQ (2017 ProjectQ-Framework (www.projectq.ch)) equality operator to deal with the transition to np.ndarray
+        """
+        if hasattr(self, 'matrix'):
+            if not hasattr(other, 'matrix'):
+                return False
+        if hasattr(other, 'matrix'):
+            if not hasattr(self, 'matrix'):
+                return False
+        if hasattr(self, 'matrix') and hasattr(other, 'matrix'):
+            if (not (isinstance(self.matrix, np.matrix) or isinstance(self.matrix, np.ndarray) ) or
+                    not (isinstance(other.matrix, np.matrix) or isinstance(other.matrix, np.ndarray))):
+                raise TypeError("One of the gates doesn't have the correct "
+                                "type (numpy.matrix) for the matrix "
+                                "attribute.")
+            if (self.matrix.shape == other.matrix.shape and
+                np.allclose(self.matrix, other.matrix,
+                            rtol=RTOL, atol=ATOL,
+                            equal_nan=False)):
+                return True
+            else:
+                return False
+        else:
+            return isinstance(other, self.__class__)
 
 class Exp11Gate(XmonGate):
     r"""A two-qubit interaction that phases the amplitude of the 11 state.
