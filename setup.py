@@ -16,13 +16,13 @@ install_requires = [
 setup(name='CirqProjectQ',
       description=('Provides: ProjectQ decompositions from common gates to native cirq Xmon gates;'
                    +'  ProjectQ backend to convert a ProjectQ algorithm to a cirq.Circuit'),
-      version='0.1',
+      version='0.2.1',
       long_description=readme,
       packages=find_packages(exclude=('docs')),
-      author='Heisenberg Quantum Simulations',
-      author_email='info@heisenberg.xyz',
-      url='https://github.com/HeisenbergQS/CirqProjectQ',
-      download_url='https://github.com/HeisenbergQS/CirqProjectQ/archive/v0.0.1.tar.gz',
+      author='HQS Quantum Simulations',
+      author_email='info@quantumsimulations.de',
+      url='https://github.com/HQSquantumsimulations/CirqProjectQ',
+      download_url='https://github.com/HQSquantumsimulations/CirqProjectQ/archive/v0.2.1.tar.gz',
       license=license,
       install_requires=install_requires
       )
