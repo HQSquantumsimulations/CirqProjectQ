@@ -1,3 +1,8 @@
+# Depreciation Warning
+
+CirqProjectQ is no longer actively maintained by HQS Quantum Simulations. Version 0.2.4 of the package is provided for legacy purposes. 
+
+
 # CirqProjectQ
 
 HQS quantum simulations has developed a port between [ProjectQ](https://github.com/ProjectQ-Framework/ProjectQ) and [Cirq](https://github.com/quantumlib/Cirq/blob/master/docs/install.md), called CirqProjectQ. ProjectQ is an open source tool to compile source code for quantum computers. Cirq is an open source framework developed by Google for building and experimenting with noisy intermediate scale quantum (NISQ) algorithms on near-term quantum processors. HQS quantum simulations is an early stage partner of Google and has had early access to Cirq.
